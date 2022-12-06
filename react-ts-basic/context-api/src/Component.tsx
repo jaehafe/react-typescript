@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { createContext, useContext } from 'react';
 
 export function createCtx<StateType, ActionType>(
   reducer: React.Reducer<StateType, ActionType>,
   initialState: StateType
 ) {
-  const defaultDispatch: React.Dispatch<ActionType> = () => initialState; // we never actually use this
-  const ctx = React.createContext({
+  const defaultDispatch: React.Dispatch<ActionType> = () => initialState; // never use
+  const ctx = createContext({
     state: initialState,
-    dispatch: defaultDispatch, // just to mock out the dispatch type and make it not optioanl
+    dispatch: defaultDispatch, // optional
   });
   function Provider(props: React.PropsWithChildren<{}>) {
     const [state, dispatch] = React.useReducer<
@@ -37,7 +37,7 @@ function reducer(state: AppState, action: Action): AppState {
     case 'minus':
       return { count: state.count - action.payload };
     default:
-      throw new Error();
+      return state;
   }
 }
 const [ctx, CountProvider] = createCtx(reducer, initialState);
@@ -54,7 +54,7 @@ export function App() {
 
 // example usage inside a component
 function Counter() {
-  const { state, dispatch } = React.useContext(CountContext);
+  const { state, dispatch } = useContext(CountContext);
   return (
     <div>
       Count: {state.count}

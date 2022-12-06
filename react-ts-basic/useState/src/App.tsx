@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { User } from './interfaces';
+import { User } from './types';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
